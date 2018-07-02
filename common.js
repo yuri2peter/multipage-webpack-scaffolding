@@ -1,15 +1,23 @@
 const pageConfig = require('./page.config.js');
+const fs = require('fs');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const pathDist = path.join(__dirname, './dist');
+const pathSrc = path.join(__dirname, './src');
+
 module.exports = {
   loadPageConfig: function loadPageConfig (webpackConfig) {
     if (pageConfig && Array.isArray(pageConfig)) {
       pageConfig.map(page => {
-        webpackConfig.entry[page.name] = `./src/pages/${page.path}/index.js`;
+        const fileHtml = `${pathSrc}/pages/${page.path}/index.html`;
+        const fileEjs = `${pathSrc}/pages/${page.path}/index.ejs`;
+        const template = fs.existsSync(fileEjs) ? fileEjs : fileHtml;
+        webpackConfig.entry[page.name] = `${pathSrc}/pages/${page.path}/index.js`;
         webpackConfig.plugins.push(new HtmlWebpackPlugin({
-          filename: path.join(__dirname, `./dist/${page.name}.html`),
-          template: path.join(__dirname, `./src/pages/${page.path}/index.html`),
+          filename: `${pathDist}/${page.name}.html`,
+          template,
           inject: true,
           chunks: [page.name],
           inlineSource: '.(js|css)$',
@@ -29,7 +37,7 @@ module.exports = {
     mode: 'none',
     entry: {},
     output: {
-      path: path.join(__dirname, './dist/'),
+      path: `${pathDist}/`,
       filename: 'static/js/[name].[hash:7].js',
       publicPath: '/',
     },
@@ -39,25 +47,31 @@ module.exports = {
           test: /\.(js)$/,
           loader: 'eslint-loader',
           enforce: 'pre',
-          include: [path.join(__dirname, './src')],
+          include: [pathSrc],
           options: {
             formatter: require('eslint-friendly-formatter'),
           },
         },
-        // html中的img标签
+        // html|ejs with img
         {
-          test: /\.html$/,
+          test: /\.(html|ejs)$/,
           loader: 'html-withimg-loader',
-          include: [path.join(__dirname, './src')],
+          include: [pathSrc],
           options: {
             limit: 10000,
             name: 'static/img/[name].[hash:7].[ext]',
           },
         },
+        // html|ejs complied
+        {
+          test: /\.(html|ejs)$/,
+          loader: 'ejs-html-loader',
+          include: [pathSrc],
+        },
         {
           test: /\.js$/,
           loader: 'babel-loader',
-          include: [path.join(__dirname, './src')],
+          include: [pathSrc],
         },
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
