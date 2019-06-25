@@ -4,7 +4,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const pathDist = path.join(__dirname, './dist');
+const pathDist = path.join(__dirname, './docs');
 const pathSrc = path.join(__dirname, './src');
 
 module.exports = {

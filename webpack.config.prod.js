@@ -16,7 +16,7 @@ let webpackConfig = {
     }),
     // 每一次build之前先删除dist
     new CleanWebpackPlugin(
-      ['dist/*'], // 匹配删除的文件
+      ['docs/*'], // 匹配删除的文件
       {
         a: {},
         root: __dirname, // 根目录

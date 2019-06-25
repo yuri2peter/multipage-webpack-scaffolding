@@ -11,7 +11,7 @@ let webpackConfig = {
       filename: 'static/css/[name].[hash:7].css',
     }),
     new CleanWebpackPlugin(
-      ['dist/*'], // 匹配删除的文件
+      ['docs/*'], // 匹配删除的文件
       {
         root: __dirname, // 根目录
         verbose: true, // 开启在控制台输出信息
@@ -21,7 +21,7 @@ let webpackConfig = {
   ],
   // 起本地服务
   devServer: {
-    contentBase: './dist/',
+    contentBase: './docs/',
     historyApiFallback: true,
     inline: true,
     hot: true,
