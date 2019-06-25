@@ -1,5 +1,5 @@
 import readme from '../../../README.md';
-require('./index.less');
+require('./index.scss');
 require('github-markdown-css');
 
 const md = require('markdown-it')();
